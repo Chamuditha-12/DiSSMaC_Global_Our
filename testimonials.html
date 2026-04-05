@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Testimonials — DiSSMaC Global</title>
+<link rel="stylesheet" href="shared.css"/>
+<style>
+.main-content{position:relative;z-index:1}
+
+/* ── REVIEW FORM ── */
+.review-section{padding:5rem 2rem;max-width:860px;margin:0 auto}
+.form-card{background:var(--dark2);border:1px solid rgba(232,25,44,.2);border-radius:12px;padding:2.5rem;margin-top:2.5rem}
+.form-card h3{font-family:var(--font-head);font-size:1.8rem;letter-spacing:1px;color:var(--white);margin-bottom:1.8rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem}
+@media(max-width:560px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem}
+.form-group label{font-size:.8rem;color:var(--grey);letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.form-group input,.form-group textarea{background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.85rem 1rem;color:var(--white);font-family:var(--font-body);font-size:.95rem;transition:border-color .2s,box-shadow .2s;resize:vertical}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(232,25,44,.1)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(136,136,136,.6)}
+
+/* STAR RATING INPUT */
+.star-label{font-size:.8rem;color:var(--grey);letter-spacing:1px;text-transform:uppercase;font-weight:500;margin-bottom:.5rem;display:block}
+.star-input{display:flex;flex-direction:row-reverse;gap:.3rem;margin-bottom:1.2rem}
+.star-input input{display:none}
+.star-input label{font-size:2rem;color:rgba(255,255,255,.2);cursor:pointer;transition:color .15s,transform .15s;line-height:1}
+.star-input label:hover,.star-input label:hover~label,
+.star-input input:checked~label{color:#fbbf24;transform:scale(1.15)}
+
+/* PIN note */
+.pin-note{font-size:.75rem;color:var(--grey);margin-top:.3rem;line-height:1.5}
+
+/* ── REVIEWS LIST ── */
+.reviews-section{padding:0 2rem 5rem;max-width:1100px;margin:0 auto}
+.reviews-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem}
+.sort-controls{display:flex;gap:.6rem;flex-wrap:wrap}
+.sort-btn{background:var(--dark2);border:1px solid rgba(255,255,255,.1);color:var(--grey);padding:.45rem 1rem;border-radius:20px;font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.sort-btn.active,.sort-btn:hover{border-color:var(--red);color:var(--red);background:rgba(232,25,44,.08)}
+
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.review-card{background:var(--dark2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:1.8rem;position:relative;transition:transform .3s,border-color .3s,box-shadow .3s;animation:fadeUp .5s both}
+.review-card:hover{transform:translateY(-4px);border-color:rgba(232,25,44,.2);box-shadow:0 10px 32px rgba(0,0,0,.35)}
+.review-stars{display:flex;gap:3px;margin-bottom:.8rem}
+.review-stars span{font-size:1.1rem;line-height:1}
+.review-text{font-size:.9rem;color:var(--light);line-height:1.7;font-weight:300;margin-bottom:1.2rem;font-style:italic}
+.review-author{display:flex;align-items:center;gap:.8rem}
+.author-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red-dim),#1a1a2e);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;font-weight:600;color:#fff;font-family:var(--font-head)}
+.author-info .name{font-size:.9rem;font-weight:600;color:var(--white)}
+.author-info .date{font-size:.75rem;color:var(--grey);margin-top:.1rem}
+.review-actions{position:absolute;top:1rem;right:1rem;display:flex;gap:.4rem}
+.action-btn{background:rgba(255,255,255,.06);border:none;color:var(--grey);padding:.3rem .6rem;border-radius:4px;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.action-btn:hover{background:rgba(232,25,44,.15);color:var(--red)}
+.action-btn.delete-btn:hover{background:rgba(232,25,44,.2)}
+
+/* SUMMARY BAR */
+.rating-summary{background:var(--dark2);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:2rem;margin-bottom:2.5rem;display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap}
+.big-rating{text-align:center;flex-shrink:0}
+.big-num{font-family:var(--font-head);font-size:4rem;color:var(--white);line-height:1}
+.big-stars{display:flex;gap:3px;justify-content:center;margin:.3rem 0}
+.big-stars span{font-size:1.2rem}
+.total-count{font-size:.75rem;color:var(--grey);letter-spacing:1px}
+.rating-bars{flex:1;min-width:200px;display:flex;flex-direction:column;gap:.5rem}
+.bar-row{display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--grey)}
+.bar-row .bar-label{width:14px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b6b);border-radius:3px;transition:width .8s ease}
+.bar-row .bar-count{width:20px;flex-shrink:0;text-align:right}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--dark2);border:1px solid rgba(232,25,44,.25);border-radius:12px;padding:2rem;width:100%;max-width:440px;animation:fadeUp .3s both}
+.modal h3{font-family:var(--font-head);font-size:1.5rem;color:var(--white);margin-bottom:.5rem}
+.modal p{font-size:.88rem;color:var(--grey);margin-bottom:1.5rem;line-height:1.5}
+.modal-actions{display:flex;gap:.8rem;flex-wrap:wrap}
+.modal input{width:100%;background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.8rem 1rem;color:var(--white);font-family:var(--font-body);font-size:.95rem;margin-bottom:1rem;transition:border-color .2s;box-sizing:border-box}
+.modal input:focus{outline:none;border-color:var(--red)}
+.modal-err{font-size:.82rem;color:var(--red);margin-bottom:.8rem;display:none}
+.modal-ok{font-size:.82rem;color:#4ade80;margin-bottom:.8rem;display:none}
+
+/* ADMIN MODAL TABS */
+.modal-tabs{display:flex;margin-bottom:1.8rem;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.modal-tab{flex:1;padding:.65rem;text-align:center;font-size:.82rem;cursor:pointer;color:var(--grey);background:var(--dark3);transition:all .2s;font-family:var(--font-body);border:none}
+.modal-tab.active{background:rgba(232,25,44,.15);color:var(--red);font-weight:600}
+.modal-tab-content{display:none}
+.modal-tab-content.active{display:block}
+
+/* ADMIN SESSION BAR */
+.admin-session-bar{background:rgba(232,25,44,.08);border-bottom:1px solid rgba(232,25,44,.18);padding:.55rem 2rem;display:none;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--grey);gap:1rem;flex-wrap:wrap;position:relative;z-index:50}
+.admin-session-bar.visible{display:flex}
+.admin-session-name{color:var(--white);font-weight:600}
+.admin-logout-btn{background:rgba(232,25,44,.15);border:1px solid rgba(232,25,44,.3);color:var(--red);padding:.28rem .75rem;border-radius:4px;font-size:.75rem;cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.admin-logout-btn:hover{background:rgba(232,25,44,.28)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--grey)}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem;opacity:.4}
+.empty-state p{font-size:.95rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark3);border:1px solid rgba(232,25,44,.4);color:var(--white);padding:1rem 1.5rem;border-radius:8px;font-size:.88rem;z-index:3000;animation:fadeUp .3s both;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.hidden{display:none}
+
+/* ADMIN FOOTER LINK */
+.admin-footer-link{display:inline-block;margin-top:.6rem;font-size:.75rem;color:rgba(136,136,136,.4);cursor:pointer;letter-spacing:.03em;transition:color .2s;background:none;border:none;font-family:inherit;padding:0}
+.admin-footer-link:hover{color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- ADMIN SESSION BAR — only visible when an admin is logged in -->
+<div class="admin-session-bar" id="admin-session-bar">
+  <span>🛡️ Admin session active &mdash; <span class="admin-session-name" id="admin-session-name"></span></span>
+  <button class="admin-logout-btn" onclick="adminLogout()">Log Out</button>
+</div>
+
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<nav id="sidebar">
+  <div class="sidebar-header"><div class="sidebar-logo">Di<span>SS</span>MaC</div><button id="close-btn" onclick="closeSidebar()">✕</button></div>
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link"><span>🏠 Home</span></a></li>
+    <li><a href="who-we-are.html" class="nav-link"><span>👥 Who We Are</span></a></li>
+    <div class="nav-divider"></div>
+    <li>
+      <div class="nav-link" onclick="toggleServices(this)"><span>⚙️ Services</span><span class="arrow">›</span></div>
+      <ul class="sub-menu" id="services-sub">
+        <li><a href="web-development.html">🌐 Website Design & Development</a></li>
+        <li><a href="advertisement.html">📢 Advertisement Creation</a></li>
+        <li><a href="business-systems.html">🖥️ Business System Creation</a></li>
+      </ul>
+    </li>
+    <div class="nav-divider"></div>
+    <li><a href="testimonials.html" class="nav-link active"><span>⭐ Testimonials</span></a></li>
+    <li><a href="pricing.html" class="nav-link"><span>💰 Pricing</span></a></li>
+    <li><a href="contact.html" class="nav-link"><span>📩 Contact Us</span></a></li>
+  </ul>
+  <div class="sidebar-foot"><p>One Vision. Limitless Reach.</p>
+  <p style="font-size:.75rem; color:var(--grey);">📞 076 - 4858230</p></div>
+</nav>
+
+<header id="topbar">
+  <button id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+  <a href="index.html" class="topbar-logo"><img src="sslog.png" alt="DiSSMaC Global" style="height:40px;width:auto;display:block;"/></a>
+  <a href="contact.html" class="topbar-cta">Get a Quote</a>
+</header>
+
+<div class="main-content">
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-label">Client Reviews</div>
+      <h1 class="page-title">WHAT CLIENTS<br><span class="r">SAY ABOUT US</span></h1>
+      <p class="page-subtitle">Real feedback from real clients. See what businesses and individuals say about working with DiSSMaC Global.</p>
+    </div>
+  </section>
+
+  <!-- SUBMIT REVIEW FORM -->
+  <section class="review-section">
+    <p class="section-label">Share Your Experience</p>
+    <h2 class="section-title">Leave a Review</h2>
+    <div class="form-card">
+      <h3>✍️ Write Your Review</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" id="inp-name" placeholder="e.g. Kasun Perera" maxlength="60"/>
+        </div>
+        <div class="form-group">
+          <label>Service Used</label>
+          <input type="text" id="inp-service" placeholder="e.g. Web Development" maxlength="60"/>
+        </div>
+      </div>
+      <span class="star-label">Your Rating *</span>
+      <div class="star-input" id="star-input">
+        <input type="radio" name="rating" id="s5" value="5"/><label for="s5">★</label>
+        <input type="radio" name="rating" id="s4" value="4"/><label for="s4">★</label>
+        <input type="radio" name="rating" id="s3" value="3"/><label for="s3">★</label>
+        <input type="radio" name="rating" id="s2" value="2"/><label for="s2">★</label>
+        <input type="radio" name="rating" id="s1" value="1"/><label for="s1">★</label>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea id="inp-review" rows="4" placeholder="Tell others about your experience with DiSSMaC Global..." maxlength="600"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Create a PIN (4–6 digits) *</label>
+        <input type="password" id="inp-pin" placeholder="e.g. 1234  —  save this to edit/delete later" maxlength="6"/>
+        <span class="pin-note">🔒 Your PIN lets you edit or delete your review later. Please save it — we cannot recover it for you.</span>
+      </div>
+      <button class="btn-primary" onclick="submitReview()" style="width:100%;justify-content:center">Submit Review →</button>
+    </div>
+  </section>
+
+  <!-- REVIEWS LIST -->
+  <section class="reviews-section">
+    <div class="rating-summary" id="rating-summary"></div>
+    <div class="reviews-header">
+      <div>
+        <p class="section-label">All Reviews</p>
+        <h2 class="section-title" id="review-count-title">Client Reviews</h2>
+      </div>
+      <div class="sort-controls">
+        <button class="sort-btn active" onclick="setSort('newest',this)">Newest</button>
+        <button class="sort-btn" onclick="setSort('highest',this)">Highest Rated</button>
+        <button class="sort-btn" onclick="setSort('lowest',this)">Lowest Rated</button>
+      </div>
+    </div>
+    <div class="reviews-grid" id="reviews-grid"></div>
+  </section>
+</div>
+
+<!-- ══ CUSTOMER PIN VERIFY MODAL ══ -->
+<div class="modal-overlay" id="pin-modal">
+  <div class="modal">
+    <h3 id="pin-modal-title">🔒 Verify Your PIN</h3>
+    <p id="pin-modal-desc">Enter the PIN you created when submitting this review.</p>
+    <input type="password" id="pin-modal-input" placeholder="Your PIN" maxlength="6"/>
+    <div class="modal-err" id="pin-modal-err">❌ Incorrect PIN. Please try again.</div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="pin-modal-confirm">Confirm</button>
+      <button class="btn-outline" onclick="closePinModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT REVIEW MODAL ══ -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal" style="max-width:520px">
+    <h3>✏️ Edit Your Review</h3>
+    <p>Update your review below.</p>
+    <span class="star-label">Rating</span>
+    <div class="star-input" id="edit-star-input">
+      <input type="radio" name="edit-rating" id="es5" value="5"/><label for="es5">★</label>
+      <input type="radio" name="edit-rating" id="es4" value="4"/><label for="es4">★</label>
+      <input type="radio" name="edit-rating" id="es3" value="3"/><label for="es3">★</label>
+      <input type="radio" name="edit-rating" id="es2" value="2"/><label for="es2">★</label>
+      <input type="radio" name="edit-rating" id="es1" value="1"/><label for="es1">★</label>
+    </div>
+    <div class="form-group" style="margin-top:.8rem">
+      <label>Review</label>
+      <textarea id="edit-text" rows="4" style="background:var(--dark3);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.8rem 1rem;color:var(--white);font-family:var(--font-body);font-size:.9rem;resize:vertical" maxlength="600"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="saveEdit()">Save Changes</button>
+      <button class="btn-outline" onclick="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN ACCESS MODAL ══
+     Opened from "For Admins" link in footer.
+     Two tabs: Log In (existing admins) | Create Account (needs master key).
+     Completely isolated from the customer PIN system.
+-->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal" style="max-width:460px">
+    <h3>🛡️ Admin Access</h3>
+    <p style="margin-bottom:1.2rem">Manage reviews for DiSSMaC Global.</p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login-btn" onclick="switchAdminTab('login')">Log In</button>
+      <button class="modal-tab" id="tab-create-btn" onclick="switchAdminTab('create')">Create Account</button>
+    </div>
+
+    <!-- LOG IN TAB -->
+    <div class="modal-tab-content active" id="tab-login">
+      <input type="text" id="admin-login-user" placeholder="Username" autocomplete="off"/>
+      <input type="password" id="admin-login-pass" placeholder="Password"/>
+      <div class="modal-err" id="admin-login-err">❌ Incorrect username or password.</div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="doAdminLogin()">Log In</button>
+        <button class="btn-outline" onclick="closeAdminModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- CREATE ACCOUNT TAB -->
+    <div class="modal-tab-content" id="tab-create">
+      <p style="font-size:.8rem;color:var(--grey);margin-bottom:1rem;background:rgba(232,25,44,.06);border:1px solid rgba(232,25,44,.15);border-radius:6px;padding:.7rem .9rem;line-height:1.6">
+        🔑 Requires the <strong style="color:var(--white)">Master Setup Key</strong>. Only the business owner has this.
+      </p>
+      <input type="text" id="admin-create-user" placeholder="Choose a Username" autocomplete="off"/>
+      <input type="password" id="admin-create-pass" placeholder="Choose a Password (min 6 chars)"/>
+      <input type="password" id="admin-create-key" placeholder="Master Setup Key"/>
+      <div class="modal-err" id="admin-create-err"></div>
+      <div class="modal-ok" id="admin-create-ok">✅ Account created! Switch to Log In to continue.</div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="doCreateAdmin()">Create Account</button>
+        <button class="btn-outline" onclick="closeAdminModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<!-- FOOTER — original layout preserved, "For Admins" link added -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="brand-name"><img src="sslog.png" alt="DiSSMaC Global" style="height:50px;width:auto;display:block;margin-bottom:.5rem;"/></div>
+      <p>One Vision. Limitless Reach. Your trusted IT solutions partner in Sri Lanka.</p>
+      <button class="admin-footer-link" onclick="openAdminModal()">For Admins</button>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="web-development.html">Web Development</a></li><li><a href="advertisement.html">Advertisement</a></li><li><a href="business-systems.html">Business Systems</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="who-we-are.html">Who We Are</a></li><li><a href="testimonials.html">Testimonials</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="contact.html">Contact Us</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span class="r">DiSSMaC Global</span>. All rights reserved.</p>
+    <p>ONE VISION. <span class="r">LIMITLESS REACH.</span></p>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   ⚠️  CHANGE THIS before going live!
+   This is the secret key required to create admin accounts.
+   Only you (the business owner) should know this.
+   Find this line, replace the value, save the file.
+══════════════════════════════════════════════════════ */
+const MASTER_SETUP_KEY = 'DiSSMaC@Owner2025';
+
+/* ══ STORAGE KEYS ══ */
+const STORE_KEY      = 'dissmac_reviews_v1';    // all reviews
+const ADMINS_KEY     = 'dissmac_admins_v1';     // admin accounts
+const SESSION_KEY    = 'dissmac_admin_session'; // active admin session (sessionStorage)
+const MY_REVIEWS_KEY = 'dissmac_my_reviews';    // review IDs owned by this browser
+
+/* ══ SIDEBAR ══ */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebar-overlay').classList.toggle('active');document.getElementById('hamburger').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('active');document.getElementById('hamburger').classList.remove('open')}
+function toggleServices(el){document.getElementById('services-sub').classList.toggle('open');el.classList.toggle('active-parent')}
+window.addEventListener('scroll',()=>document.getElementById('topbar').classList.toggle('scrolled',window.scrollY>40));
+
+/* ══ REVIEWS STORAGE ══ */
+function loadReviews(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY))||[]; }catch(e){ return []; } }
+function saveReviews(r){ localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
+
+/* ══ BROWSER OWNERSHIP (which review IDs this browser submitted) ══ */
+function loadMyReviews(){ try{ return JSON.parse(localStorage.getItem(MY_REVIEWS_KEY))||[]; }catch(e){ return []; } }
+function saveMyReviews(arr){ localStorage.setItem(MY_REVIEWS_KEY, JSON.stringify(arr)); }
+
+/* ══ HASH (used for customer PIN and admin password — same algorithm, separate systems) ══ */
+function hashStr(s){ let h=5381;for(let i=0;i<s.length;i++){h=((h<<5)+h)+s.charCodeAt(i);h|=0;}return String(h>>>0); }
+
+/* ══ ADMIN ACCOUNTS ══ */
+function loadAdmins(){ try{ return JSON.parse(localStorage.getItem(ADMINS_KEY))||[]; }catch(e){ return []; } }
+function saveAdmins(a){ localStorage.setItem(ADMINS_KEY, JSON.stringify(a)); }
+
+/* ══ ADMIN SESSION (sessionStorage — automatically clears when browser tab closes) ══ */
+function getAdminSession(){ try{ return JSON.parse(sessionStorage.getItem(SESSION_KEY))||null; }catch(e){ return null; } }
+function setAdminSession(name){ sessionStorage.setItem(SESSION_KEY, JSON.stringify({name})); }
+function clearAdminSession(){ sessionStorage.removeItem(SESSION_KEY); }
+function isAdmin(){ return !!getAdminSession(); }
+
+/* ══ SORT ══ */
+let sortMode='newest';
+function setSort(mode,btn){
+  sortMode=mode;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderReviews();
+}
+
+/* ══ STARS HTML ══ */
+function starsHTML(n){
+  let h='';
+  for(let i=1;i<=5;i++) h+=`<span style="color:${i<=n?'#fbbf24':'rgba(255,255,255,.2)'}">★</span>`;
+  return h;
+}
+
+/* ══ ESCAPE HTML ══ */
+function escapeHtml(t){ const d=document.createElement('div');d.textContent=t;return d.innerHTML; }
+
+/* ══════════════════════════════════════════════════════
+   RENDER REVIEWS
+   
+   Three tiers of access per card:
+   1. Admin logged in      → Edit + Delete shown, no PIN needed
+   2. Browser owner        → Edit + Delete shown, no PIN needed
+   3. Unknown browser      → Small ✏️ 🗑️ icons shown, clicking opens PIN modal
+══════════════════════════════════════════════════════ */
+function renderReviews(){
+  const reviews=[...loadReviews()];
+  const myIds=loadMyReviews();
+  const adminLoggedIn=isAdmin();
+  const grid=document.getElementById('reviews-grid');
+  document.getElementById('review-count-title').textContent=`${reviews.length} Review${reviews.length!==1?'s':''}`;
+
+  if(reviews.length===0){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="icon">💬</div><p>No reviews yet. Be the first to share your experience!</p></div>`;
+    return;
+  }
+
+  if(sortMode==='highest') reviews.sort((a,b)=>b.rating-a.rating);
+  else if(sortMode==='lowest') reviews.sort((a,b)=>a.rating-b.rating);
+  else reviews.sort((a,b)=>b.id-a.id);
+
+  grid.innerHTML=reviews.map((r,delay)=>{
+    const d=new Date(r.date);
+    const dateStr=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const initials=r.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const svcBadge=r.service?`<span style="display:inline-block;background:rgba(232,25,44,.1);border:1px solid rgba(232,25,44,.2);color:var(--light);padding:.2rem .6rem;border-radius:10px;font-size:.72rem;margin-bottom:.8rem">${r.service}</span>`:'';
+    const browserOwner=myIds.includes(r.id);
+    let actionsHtml='';
+
+    if(adminLoggedIn || browserOwner){
+      // Full access — no PIN required
+      actionsHtml=`
+        <div class="review-actions">
+          <button class="action-btn" onclick="openEditDirect('${r.id}')">✏️ Edit</button>
+          <button class="action-btn delete-btn" onclick="doDelete('${r.id}')">🗑️ Delete</button>
+        </div>`;
+    } else {
+      // Unknown browser — PIN fallback (small icon buttons so they don't intrude on other visitors)
+      actionsHtml=`
+        <div class="review-actions">
+          <button class="action-btn" title="Edit your review" onclick="openPinFlow('${r.id}','edit')">✏️</button>
+          <button class="action-btn delete-btn" title="Delete your review" onclick="openPinFlow('${r.id}','delete')">🗑️</button>
+        </div>`;
+    }
+
+    return `
+    <div class="review-card" style="animation-delay:${delay*0.07}s">
+      ${actionsHtml}
+      <div class="review-stars">${starsHTML(r.rating)}</div>
+      ${svcBadge}
+      <p class="review-text">"${escapeHtml(r.text)}"</p>
+      <div class="review-author">
+        <div class="author-avatar">${initials}</div>
+        <div class="author-info">
+          <div class="name">${escapeHtml(r.name)}</div>
+          <div class="date">${dateStr}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══ SUMMARY BAR ══ */
+function renderSummary(){
+  const reviews=loadReviews();
+  const summary=document.getElementById('rating-summary');
+  if(reviews.length===0){summary.style.display='none';return;}
+  summary.style.display='flex';
+  const avg=reviews.reduce((s,r)=>s+r.rating,0)/reviews.length;
+  const counts={5:0,4:0,3:0,2:0,1:0};
+  reviews.forEach(r=>counts[r.rating]++);
+  summary.innerHTML=`
+    <div class="big-rating">
+      <div class="big-num">${avg.toFixed(1)}</div>
+      <div class="big-stars">${starsHTML(Math.round(avg))}</div>
+      <div class="total-count">${reviews.length} review${reviews.length!==1?'s':''}</div>
+    </div>
+    <div class="rating-bars">
+      ${[5,4,3,2,1].map(n=>`
+        <div class="bar-row">
+          <span class="bar-label">${n}</span>
+          <span style="color:#fbbf24;font-size:.9rem">★</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${reviews.length?Math.round(counts[n]/reviews.length*100):0}%"></div></div>
+          <span class="bar-count">${counts[n]}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   SUBMIT REVIEW
+   Saves hashed PIN + registers this browser as owner
+══════════════════════════════════════════════════════ */
+function submitReview(){
+  const name=document.getElementById('inp-name').value.trim();
+  const service=document.getElementById('inp-service').value.trim();
+  const text=document.getElementById('inp-review').value.trim();
+  const pin=document.getElementById('inp-pin').value.trim();
+  const ratingEl=document.querySelector('input[name="rating"]:checked');
+
+  if(!name){showToast('⚠️ Please enter your name.');return;}
+  if(!ratingEl){showToast('⚠️ Please select a star rating.');return;}
+  if(!text){showToast('⚠️ Please write your review.');return;}
+  if(!pin||pin.length<4){showToast('⚠️ PIN must be at least 4 digits.');return;}
+  if(!/^\d+$/.test(pin)){showToast('⚠️ PIN must be numbers only.');return;}
+
+  const reviews=loadReviews();
+  const id=Date.now().toString();
+  reviews.unshift({
+    id, name, service,
+    rating: parseInt(ratingEl.value),
+    text,
+    pin: hashStr(pin),  // only the hash is stored, never the raw PIN
+    date: new Date().toISOString()
+  });
+  saveReviews(reviews);
+
+  // Register this browser as the owner of this review
+  const myIds=loadMyReviews();
+  myIds.push(id);
+  saveMyReviews(myIds);
+
+  document.getElementById('inp-name').value='';
+  document.getElementById('inp-service').value='';
+  document.getElementById('inp-review').value='';
+  document.getElementById('inp-pin').value='';
+  document.querySelectorAll('input[name="rating"]').forEach(r=>r.checked=false);
+
+  showToast('✅ Review submitted! Thank you.');
+  renderReviews();renderSummary();
+  document.getElementById('reviews-grid').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ══ DELETE ══ */
+function doDelete(id){
+  saveReviews(loadReviews().filter(r=>r.id!==id));
+  saveMyReviews(loadMyReviews().filter(x=>x!==id));
+  renderReviews();renderSummary();
+  showToast('🗑️ Review deleted.');
+}
+
+/* ══ EDIT — direct (admin or browser owner, no PIN needed) ══ */
+let editingId=null;
+function openEditDirect(id){
+  editingId=id;
+  const review=loadReviews().find(r=>r.id===id);
+  if(!review)return;
+  document.getElementById('edit-text').value=review.text;
+  document.querySelectorAll('input[name="edit-rating"]').forEach(r=>{ r.checked=(parseInt(r.value)===review.rating); });
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('open');editingId=null;}
+function saveEdit(){
+  const text=document.getElementById('edit-text').value.trim();
+  const rEl=document.querySelector('input[name="edit-rating"]:checked');
+  if(!text){showToast('⚠️ Review text cannot be empty.');return;}
+  if(!rEl){showToast('⚠️ Please select a rating.');return;}
+  const reviews=loadReviews();
+  const idx=reviews.findIndex(r=>r.id===editingId);
+  if(idx<0){closeEditModal();return;}
+  reviews[idx].text=text; reviews[idx].rating=parseInt(rEl.value); reviews[idx].edited=true;
+  saveReviews(reviews);
+  closeEditModal();renderReviews();renderSummary();
+  showToast('✅ Review updated!');
+}
+
+/* ══════════════════════════════════════════════════════
+   CUSTOMER PIN FLOW
+   Used when browser is not recognised.
+   Verifying a correct PIN also re-registers the browser
+   so they won't need the PIN again on this device.
+   
+   ⚠️  This flow has ZERO connection to the admin system.
+       Entering a PIN here only unlocks that one review.
+       It cannot grant admin access under any circumstance.
+══════════════════════════════════════════════════════ */
+let pinPendingId=null, pinPendingAction=null;
+
+function openPinFlow(id,action){
+  pinPendingId=id; pinPendingAction=action;
+  document.getElementById('pin-modal-title').textContent=action==='edit'?'✏️ Edit Your Review':'🗑️ Delete Your Review';
+  document.getElementById('pin-modal-desc').textContent='Enter the PIN you created when submitting this review.';
+  document.getElementById('pin-modal-input').value='';
+  document.getElementById('pin-modal-err').style.display='none';
+  document.getElementById('pin-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('pin-modal-input').focus(),100);
+}
+function closePinModal(){
+  document.getElementById('pin-modal').classList.remove('open');
+  pinPendingId=null; pinPendingAction=null;
+}
+
+document.getElementById('pin-modal-confirm').onclick=function(){
+  const pin=document.getElementById('pin-modal-input').value.trim();
+  const errEl=document.getElementById('pin-modal-err');
+  if(!pin){errEl.textContent='⚠️ Please enter your PIN.';errEl.style.display='block';return;}
+
+  const review=loadReviews().find(r=>r.id===pinPendingId);
+  if(!review){closePinModal();return;}
+
+  if(review.pin!==hashStr(pin)){
+    errEl.textContent='❌ Incorrect PIN. Please try again.';
+    errEl.style.display='block';
+    return;
+  }
+
+  // PIN correct — re-register this browser so PIN isn't needed next time
+  const myIds=loadMyReviews();
+  if(!myIds.includes(pinPendingId)){ myIds.push(pinPendingId); saveMyReviews(myIds); }
+
+  const id=pinPendingId, action=pinPendingAction;
+  closePinModal();
+  if(action==='delete') doDelete(id);
+  else openEditDirect(id);
+};
+document.getElementById('pin-modal-input').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('pin-modal-confirm').click(); });
+
+/* ══════════════════════════════════════════════════════
+   ADMIN MODAL — opened from "For Admins" footer link
+   Two tabs: Log In | Create Account
+   Completely separate from customer PIN system.
+══════════════════════════════════════════════════════ */
+function openAdminModal(){
+  ['admin-login-user','admin-login-pass','admin-create-user','admin-create-pass','admin-create-key']
+    .forEach(id=>document.getElementById(id).value='');
+  ['admin-login-err','admin-create-err','admin-create-ok']
+    .forEach(id=>document.getElementById(id).style.display='none');
+  switchAdminTab('login');
+  document.getElementById('admin-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('admin-login-user').focus(),100);
+}
+function closeAdminModal(){ document.getElementById('admin-modal').classList.remove('open'); }
+
+function switchAdminTab(tab){
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-create').classList.toggle('active',tab==='create');
+  document.getElementById('tab-login-btn').classList.toggle('active',tab==='login');
+  document.getElementById('tab-create-btn').classList.toggle('active',tab==='create');
+}
+
+/* ── Admin Login ── */
+function doAdminLogin(){
+  const user=document.getElementById('admin-login-user').value.trim();
+  const pass=document.getElementById('admin-login-pass').value;
+  const errEl=document.getElementById('admin-login-err');
+  const match=loadAdmins().find(a=>a.username===user && a.passHash===hashStr(pass));
+  if(!match){ errEl.style.display='block'; return; }
+  setAdminSession(user);
+  closeAdminModal();
+  updateAdminBar();
+  renderReviews();
+  showToast('✅ Welcome, '+user+'! Admin access granted.');
+}
+document.getElementById('admin-login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') doAdminLogin(); });
+
+/* ── Create Admin Account (requires Master Setup Key) ── */
+function doCreateAdmin(){
+  const user=document.getElementById('admin-create-user').value.trim();
+  const pass=document.getElementById('admin-create-pass').value;
+  const key=document.getElementById('admin-create-key').value;
+  const errEl=document.getElementById('admin-create-err');
+  const okEl=document.getElementById('admin-create-ok');
+  errEl.style.display='none'; okEl.style.display='none';
+
+  if(!user||!pass||!key){ errEl.textContent='❌ All fields are required.'; errEl.style.display='block'; return; }
+  if(pass.length<6){ errEl.textContent='❌ Password must be at least 6 characters.'; errEl.style.display='block'; return; }
+
+  // Master key check — this is the only gate between public and admin
+  if(key!==MASTER_SETUP_KEY){ errEl.textContent='❌ Incorrect Master Setup Key.'; errEl.style.display='block'; return; }
+
+  const admins=loadAdmins();
+  if(admins.find(a=>a.username===user)){ errEl.textContent='❌ That username already exists.'; errEl.style.display='block'; return; }
+
+  admins.push({ username:user, passHash:hashStr(pass) });
+  saveAdmins(admins);
+  document.getElementById('admin-create-user').value='';
+  document.getElementById('admin-create-pass').value='';
+  document.getElementById('admin-create-key').value='';
+  okEl.style.display='block';
+  showToast('✅ Admin account "'+user+'" created!');
+}
+
+/* ── Admin Logout ── */
+function adminLogout(){
+  clearAdminSession();
+  updateAdminBar();
+  renderReviews();
+  showToast('👋 Logged out of admin session.');
+}
+
+/* ── Show/hide admin session bar at top of page ── */
+function updateAdminBar(){
+  const session=getAdminSession();
+  const bar=document.getElementById('admin-session-bar');
+  if(session){ bar.classList.add('visible'); document.getElementById('admin-session-name').textContent=session.name; }
+  else { bar.classList.remove('visible'); }
+}
+
+/* ══ TOAST ══ */
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.add('hidden'),3500);
+}
+
+/* ══ INIT ══ */
+updateAdminBar();
+renderReviews();
+renderSummary();
+</script>
+</body>
+</html>
